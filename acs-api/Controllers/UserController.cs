@@ -80,8 +80,38 @@ namespace ACS.Controllers
         [HttpPost("auth")]
         public IActionResult Authenticate_id([FromBody] AuthModel model)
         {
-            if (model != null && model.Passphrase == IUserService.MyPassPhrase)
-                return Ok(ResponseModel<UserModel>.SuccessResponse(null));
+            if (model != null)
+            {
+                if (model.IsAdmin)
+                {
+                    if (model.Password == IUserService.AdminPassword
+                        && model.Email == IUserService.AdminEmail)
+                        return Ok(ResponseModel<UserModel>.SuccessResponse(null));
+                    else
+                        return Ok(new ResponseModel<UserModel>
+                        {
+                            Success = false,
+                            Errors = new List<string>
+                        {
+                           "Wrong email or password"
+                        }
+                        });
+                }
+                else
+                {
+                    if (model != null && model.Password == IUserService.StudentPassword)
+                        return Ok(ResponseModel<UserModel>.SuccessResponse(null));
+                    else
+                        return Ok(new ResponseModel<UserModel>
+                        {
+                            Success = false,
+                            Errors = new List<string>
+                        {
+                           "Wrong password"
+                        }
+                        });
+                }
+            }
 
             return Ok(ResponseModel<UserModel>.ErrorResponse(null));
         }

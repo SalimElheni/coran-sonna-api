@@ -19,7 +19,9 @@ namespace ACS.Services
     
     public interface IUserService
     {
-        public static string MyPassPhrase = "4ywHK0PQNzoL";
+        public static string StudentPassword = "4ywHK0PQNzoL";
+        public static string AdminEmail = "coran-sonna@gmail.com";
+        public static string AdminPassword = "4ywHK0PQNzoL";
         public UserModel Authenticate(string username, string password);
         public UserModel Create(RegisterModel user);
         public int Delete(int id);
