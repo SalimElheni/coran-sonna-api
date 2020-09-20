@@ -20,6 +20,7 @@ namespace ACS
     using Microsoft.IdentityModel.Tokens;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using MySql.Data.MySqlClient;
+    using acs._services;
 
     public class Startup
     {
@@ -40,7 +41,7 @@ namespace ACS
             {
                 jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
             })
-        .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -77,6 +78,8 @@ namespace ACS
 
             // Register Services
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IFileService, FileService>(x => new FileService(appSettings.LinksFilePath));
 
             // connection to MySql
             services.AddTransient<AppDb>(x => new AppDb(Configuration["ConnectionStrings:acs"]));
