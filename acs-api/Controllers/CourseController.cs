@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http.Controllers;
 using acs._models;
 using acs._services;
 using ACS.Models;
@@ -61,6 +62,21 @@ namespace acs.Controllers
             var courses = _courseService.Delete(id);
 
             return Ok(ResponseModel<int>.SuccessResponse(courses));
+        }
+        [AllowAnonymous]
+        [HttpGet("getLiveLink")]
+        public IActionResult GetLiveLink()
+        {
+            var courses = _courseService.GetLiveLink();
+
+            return Ok(ResponseModel<LinkModel>.SuccessResponse(courses));
+        }
+        [AllowAnonymous]
+        [HttpPost("setLiveLink")]
+        public IActionResult SetLiveLink(LinkModel link)
+        {
+            _courseService.SetLiveLink(link);
+            return Ok(ResponseModel<string>.SuccessResponse(""));
         }
     }
 }
