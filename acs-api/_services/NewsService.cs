@@ -7,27 +7,25 @@ using System.Threading.Tasks;
 
 namespace acs._services
 {
-    public interface ICourseService
+    public interface INewsService
     {
         public List<LinkModel> Get();
         public LinkModel Get(int id);
         public int Add(LinkModel model);
         public int Update(LinkModel model);
         public int Delete(int id);
-        public LinkModel GetLiveLink();
-        public void SetLiveLink(LinkModel link);
     }
-    public class CourseService : ICourseService
+    public class NewsService : INewsService
     {
         private IFileService _fileService;
-        public CourseService(IFileService fileService)
+        public NewsService(IFileService fileService)
         {
             _fileService = fileService;
         }
         public int Add(LinkModel model)
         {
             var db = JsonConvert.DeserializeObject<FileDBModel>(_fileService.GetContent());
-            var links = db?.RecordingLinks;
+            var links = db?.NewsLinks;
 
             var maxId = 0;
             if (links != null && links.Count > 0)
@@ -38,14 +36,14 @@ namespace acs._services
             {
                 links = new List<LinkModel> { };
             }
-
+            
             model.LastEdit = DateTime.Now;
             model.Id = maxId + 1;
             links.Add(model);
 
             // Save content to file
             db = db ?? new FileDBModel();
-            db.RecordingLinks = links;
+            db.NewsLinks = links;
             _fileService.SetContent(JsonConvert.SerializeObject(db));
 
             return maxId + 1;
@@ -54,7 +52,7 @@ namespace acs._services
         public int Delete(int id)
         {
             var db = JsonConvert.DeserializeObject<FileDBModel>(_fileService.GetContent());
-            var links = db?.RecordingLinks;
+            var links = db?.NewsLinks;
 
             var idx = -1;
             if (links != null && links.Count > 0)
@@ -68,20 +66,20 @@ namespace acs._services
 
             // Save content to file
             db = db ?? new FileDBModel();
-            db.RecordingLinks = links;
+            db.NewsLinks = links;
             _fileService.SetContent(JsonConvert.SerializeObject(db));
             return idx;
         }
 
         public List<LinkModel> Get()
         {
-            return JsonConvert.DeserializeObject<FileDBModel>(_fileService.GetContent())?.RecordingLinks;
+            return JsonConvert.DeserializeObject<FileDBModel>(_fileService.GetContent())?.NewsLinks;
         }
 
         public LinkModel Get(int id)
         {
             var db = JsonConvert.DeserializeObject<FileDBModel>(_fileService.GetContent());
-            var links = db?.RecordingLinks;
+            var links = db?.NewsLinks;
 
             LinkModel link = null;
             if (links != null && links.Count > 0)
@@ -99,7 +97,7 @@ namespace acs._services
         public int Update(LinkModel model)
         {
             var db = JsonConvert.DeserializeObject<FileDBModel>(_fileService.GetContent());
-            var links = db?.RecordingLinks;
+            var links = db?.NewsLinks;
 
             if (links != null && links.Count > 0)
             {
@@ -111,26 +109,13 @@ namespace acs._services
 
                     // Save content to file
                     db = db ?? new FileDBModel();
-                    db.RecordingLinks = links;
+                    db.NewsLinks = links;
                     _fileService.SetContent(JsonConvert.SerializeObject(db));
                     return model.Id;
                 }
             }
 
             return -1; 
-        }
-        public LinkModel GetLiveLink()
-        {
-            return JsonConvert.DeserializeObject<FileDBModel>(_fileService.GetContent())?.LiveLink;
-        }
-        public void SetLiveLink(LinkModel link)
-        {
-            var db = JsonConvert.DeserializeObject<FileDBModel>(_fileService.GetContent());
-
-            // Save content to file
-            db = db ?? new FileDBModel();
-            db.LiveLink = link;
-            _fileService.SetContent(JsonConvert.SerializeObject(db));
         }
     }
 }

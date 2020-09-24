@@ -79,6 +79,7 @@ namespace ACS
             // Register Services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<INewsService, NewsService>();
             services.AddScoped<IFileService, FileService>(x => new FileService(appSettings.LinksFilePath));
 
             // connection to MySql

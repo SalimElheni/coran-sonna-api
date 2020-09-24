@@ -9,5 +9,6 @@ namespace acs._models
     {
         public LinkModel LiveLink { get; set; }
         public List<LinkModel> RecordingLinks { get; set; }
+        public List<LinkModel> NewsLinks { get; set; }
     }
 }
