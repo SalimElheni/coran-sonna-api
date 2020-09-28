@@ -21,7 +21,7 @@ namespace ACS.Services
     {
         public static string StudentPassword = "4ywHK0PQNzoL";
         public static string AdminEmail = "coran-sonna@gmail.com";
-        public static string AdminPassword = "4ywHK0PQNzoL";
+        public static string AdminPassword = "5Y%x6u2Wx@";
         public UserModel Authenticate(string username, string password);
         public UserModel Create(RegisterModel user);
         public int Delete(int id);

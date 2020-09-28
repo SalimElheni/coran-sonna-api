@@ -24,6 +24,7 @@ namespace ACS
 
     public class Startup
     {
+        readonly string AllowOriginsSpecs = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -34,6 +35,17 @@ namespace ACS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: AllowOriginsSpecs,
+                                  builder =>
+                                  {
+                                      builder.AllowAnyOrigin()
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod() ;
+                                  });
+            });
+
             services.AddMvc(setupAction =>
             {
                 setupAction.EnableEndpointRouting = false;
@@ -89,12 +101,13 @@ namespace ACS
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(builder => builder
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .SetIsOriginAllowed((host) => true)
-                .AllowCredentials()
-            );
+            //app.UseCors(builder => builder
+            //    .AllowAnyHeader()
+            //    .AllowAnyMethod()
+            //    .SetIsOriginAllowed((host) => true)
+            //    .AllowCredentials()
+            //    .AllowAnyOrigin()
+            //);
 
             if (env.IsDevelopment())
             {
@@ -115,8 +128,8 @@ namespace ACS
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
             app.UseAuthentication();
+            app.UseCors(AllowOriginsSpecs);
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
